@@ -25,7 +25,7 @@ public class AppleBatterySnapshot_Tests
     public void Get_Ioreg_Sample_MatchesExpected()
     {
         if (_sample == null) throw new Exception($"Failed to find sample file {SampleIoregTextFile}");
-        AppleBatteryState batteryState = AppleBatterySnapshot.CreateSystemSnapshotFromIOReg(new StringReader(_sample)).AppleBatteryState;
+        AppleBatteryState batteryState = AppleSystemBatterySnapshot.CreateSystemSnapshotFromIOReg(new StringReader(_sample)).AppleBatteryState;
         Assert.Equal(batteryState.CurrentCapacity, 3005);
         Assert.Equal(batteryState.AppleRawCurrentCapacity, 3005);
         Assert.Equal(batteryState.MaxCapacity, 3531);
@@ -37,7 +37,7 @@ public class AppleBatterySnapshot_Tests
     public async Task GetAsync_Ioreg_Sample_MatchesExpected()
     {
         if (_sample == null) throw new Exception($"Failed to find sample file {SampleIoregTextFile}");
-        AppleBatteryState batteryState = (await AppleBatterySnapshot.CreateSystemSnapshotFromIORegAsync(new StringReader(_sample), TestContext.Current.CancellationToken)).AppleBatteryState;
+        AppleBatteryState batteryState = (await AppleSystemBatterySnapshot.CreateSystemSnapshotFromIORegAsync(new StringReader(_sample), TestContext.Current.CancellationToken)).AppleBatteryState;
         Assert.Equal(batteryState.CurrentCapacity, 3005);
         Assert.Equal(batteryState.AppleRawCurrentCapacity, 3005);
         Assert.Equal(batteryState.MaxCapacity, 3531);
@@ -50,9 +50,9 @@ public class AppleBatterySnapshot_Tests
     public async Task GetAsync_BatteryInfo_Actual_Valid()
     {
         Assert.SkipWhen(!OperatingSystem.IsMacOS(), "ioreg is only supported on macOS");
-        var snapshot = await AppleBatterySnapshot.CreateSystemSnapshotFromIORegAsync(TestContext.Current.CancellationToken);
+        var snapshot = await AppleSystemBatterySnapshot.CreateSystemSnapshotFromIORegAsync(TestContext.Current.CancellationToken);
         AssertValid(snapshot.AppleBatteryState);
-        BatterySnapshot_Tests.AssertValid(snapshot.GetBatteryInfo());
+        BatterySnapshot_Tests.AssertValid(snapshot.GetPrimaryBatteryInfo());
     }
 
     [Fact]
@@ -60,9 +60,9 @@ public class AppleBatterySnapshot_Tests
     public void Get_BatteryInfo_Actual_Valid()
     {
         Assert.SkipWhen(!OperatingSystem.IsMacOS(), "ioreg is only supported on macOS");
-        var snapshot = AppleBatterySnapshot.CreateSystemSnapshotFromIOReg();
+        var snapshot = AppleSystemBatterySnapshot.CreateSystemSnapshotFromIOReg();
         AssertValid(snapshot.AppleBatteryState);
-        BatterySnapshot_Tests.AssertValid(snapshot.GetBatteryInfo());
+        BatterySnapshot_Tests.AssertValid(snapshot.GetPrimaryBatteryInfo());
     }
 
     private static void AssertValid(AppleBatteryState batteryState)

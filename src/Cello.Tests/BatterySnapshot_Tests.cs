@@ -5,17 +5,17 @@ public class BatterySnapshot_Tests
     [Fact]
     public async Task CreateSystemSnapshotAsync_Valid()
     {
-        Assert.SkipWhen(!BatterySnapshot.IsSystemSnapshotSupported(), "system snapshots are not supported on this OS");
-        var snapshot = await BatterySnapshot.CreateSystemSnapshotAsync(TestContext.Current.CancellationToken);
-        AssertValid(snapshot.GetBatteryInfo());
+        Assert.SkipWhen(!SystemBatterySnapshot.IsSystemSnapshotSupported(), "system snapshots are not supported on this OS");
+        var snapshot = await SystemBatterySnapshot.CreateSystemSnapshotAsync(TestContext.Current.CancellationToken);
+        AssertValid(snapshot.GetPrimaryBatteryInfo());
     }
 
     [Fact]
     public void CreateSystemSnapshot_Valid()
     {
-        Assert.SkipWhen(!BatterySnapshot.IsSystemSnapshotSupported(), "system snapshots are not supported on this OS");
-        var snapshot = BatterySnapshot.CreateSystemSnapshot();
-        AssertValid(snapshot.GetBatteryInfo());
+        Assert.SkipWhen(!SystemBatterySnapshot.IsSystemSnapshotSupported(), "system snapshots are not supported on this OS");
+        var snapshot = SystemBatterySnapshot.CreateSystemSnapshot();
+        AssertValid(snapshot.GetPrimaryBatteryInfo());
     }
 
     internal static void AssertValid(BatteryInfo batteryInfo)

@@ -7,27 +7,26 @@ using Windows.Win32.System.Power;
 namespace Cello.Microsoft;
 
 /// <summary>
-/// Basic snapshot on a Windows system.
+/// Represents a basic snapshot of the state of system batteries a Windows system.
 /// </summary>
-public record WindowsBasicBatterySnapshot : BatterySnapshot
+public record WindowsBasicSystemBatterySnapshot : SystemBatterySnapshot
 {
     [SupportedOSPlatform("windows5.1.2600")]
-    internal WindowsBasicBatterySnapshot(SYSTEM_POWER_STATUS systemPowerStatus)
+    internal WindowsBasicSystemBatterySnapshot(SYSTEM_POWER_STATUS systemPowerStatus)
     {
         _systemPowerStatus = systemPowerStatus;
     }
 
     internal SYSTEM_POWER_STATUS _systemPowerStatus { get; init; }
 
-    /// <inheritdoc />
-    public override BatteryInfo GetBatteryInfo()
+    private static BatteryInfo CreateBatteryInfo(SYSTEM_POWER_STATUS systemPowerStatus)
     {
         ChargingFlags chargingFlags = ChargingFlags.None;
-        if ((_systemPowerStatus.BatteryFlag & 8) != 0)
+        if ((systemPowerStatus.BatteryFlag & 8) != 0)
         {
             chargingFlags |= ChargingFlags.ExternalPowerCharging;
         }
-        if (_systemPowerStatus.ACLineStatus == 1)
+        if (systemPowerStatus.ACLineStatus == 1)
         {
             chargingFlags |= ChargingFlags.ExternalPowerConnected;
         }
@@ -37,11 +36,23 @@ public record WindowsBasicBatterySnapshot : BatterySnapshot
         }
         return new BatteryInfo
         {
-            HasBattery = (_systemPowerStatus.BatteryFlag & 128) == 0, //
-            ChargePercentage = _systemPowerStatus.BatteryLifePercent, //
+            HasBattery = (systemPowerStatus.BatteryFlag & 128) == 0, //
+            ChargePercentage = systemPowerStatus.BatteryLifePercent, //
             ChargingFlags = chargingFlags, //
-            TimeToDischargeCompletion = _systemPowerStatus.BatteryLifeTime != uint.MaxValue ? _systemPowerStatus.BatteryLifeTime / 60.0 : null
+            TimeToDischargeCompletion = systemPowerStatus.BatteryLifeTime != uint.MaxValue ? systemPowerStatus.BatteryLifeTime / 60.0 : null
         };
+    }
+
+    /// <inheritdoc />
+    public override BatteryInfo GetPrimaryBatteryInfo()
+    {
+        return CreateBatteryInfo(_systemPowerStatus);
+    }
+
+    /// <inheritdoc />
+    public override List<BatteryInfo> GetBatteryInfos()
+    {
+        return [CreateBatteryInfo(_systemPowerStatus)];
     }
 
     /// <inheritdoc />
@@ -56,12 +67,12 @@ public record WindowsBasicBatterySnapshot : BatterySnapshot
     /// <returns>Snapshot content.</returns>
     /// <exception cref="Win32Exception">Thrown if failed to get system power status.</exception>
     [SupportedOSPlatform("windows5.1.2600")]
-    public static WindowsBasicBatterySnapshot CreateSystemSnapshotFromSystemPowerStatus()
+    public static WindowsBasicSystemBatterySnapshot CreateSystemSnapshotFromSystemPowerStatus()
     {
         if (!PInvoke.GetSystemPowerStatus(out var systemPowerStatus))
         {
             throw new Win32Exception(Marshal.GetLastWin32Error());
         }
-        return new WindowsBasicBatterySnapshot(systemPowerStatus);
+        return new WindowsBasicSystemBatterySnapshot(systemPowerStatus);
     }
 }

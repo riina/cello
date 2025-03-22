@@ -17,8 +17,8 @@ class XBatCommand : Command
 
     private async Task HandleAsync(InvocationContext context)
     {
-        var snap = await BatterySnapshot.CreateSystemSnapshotAsync();
-        var bi = snap.GetBatteryInfo();
+        var snap = await SystemBatterySnapshot.CreateSystemSnapshotAsync();
+        var bi = snap.GetPrimaryBatteryInfo();
         await using var stream = Console.OpenStandardOutput();
         if (bi.HasBattery)
         {

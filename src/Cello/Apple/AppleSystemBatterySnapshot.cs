@@ -4,15 +4,21 @@ using System.Runtime.Versioning;
 namespace Cello.Apple;
 
 /// <summary>
-/// Snapshot of an Apple Mac battery.
+/// Represents a snapshot of the state of system batteries on an Apple Mac.
 /// </summary>
 /// <param name="AppleBatteryState">Raw Apple Mac battery state data.</param>
-public record AppleBatterySnapshot(AppleBatteryState AppleBatteryState) : BatterySnapshot
+public record AppleSystemBatterySnapshot(AppleBatteryState AppleBatteryState) : SystemBatterySnapshot
 {
     /// <inheritdoc />
-    public override BatteryInfo GetBatteryInfo()
+    public override BatteryInfo GetPrimaryBatteryInfo()
     {
         return AppleBatteryState.GetBatteryInfo();
+    }
+
+    /// <inheritdoc />
+    public override List<BatteryInfo> GetBatteryInfos()
+    {
+        return [AppleBatteryState.GetBatteryInfo()];
     }
 
     /// <inheritdoc />
@@ -35,7 +41,7 @@ public record AppleBatterySnapshot(AppleBatteryState AppleBatteryState) : Batter
     /// </summary>
     /// <returns>Snapshot content.</returns>
     [SupportedOSPlatform("MacOS")]
-    public static AppleBatterySnapshot CreateSystemSnapshotFromIOReg()
+    public static AppleSystemBatterySnapshot CreateSystemSnapshotFromIOReg()
     {
         using Process p = StartIORegProcess();
         using StreamReader sr = p.StandardOutput;
@@ -52,7 +58,7 @@ public record AppleBatterySnapshot(AppleBatteryState AppleBatteryState) : Batter
     /// </summary>
     /// <returns>A <see cref="Task{AppleBatterySnapshot}"/> returning the snapshot content.</returns>
     [SupportedOSPlatform("MacOS")]
-    public static async Task<AppleBatterySnapshot> CreateSystemSnapshotFromIORegAsync(CancellationToken cancellationToken = default)
+    public static async Task<AppleSystemBatterySnapshot> CreateSystemSnapshotFromIORegAsync(CancellationToken cancellationToken = default)
     {
         using Process p = StartIORegProcess();
         using StreamReader sr = p.StandardOutput;
@@ -68,7 +74,7 @@ public record AppleBatterySnapshot(AppleBatteryState AppleBatteryState) : Batter
     /// Creates a snapshot of the primary system battery using output from ioreg utility.
     /// </summary>
     /// <returns>Snapshot content.</returns>
-    public static AppleBatterySnapshot CreateSystemSnapshotFromIOReg(TextReader ioRegTextReader)
+    public static AppleSystemBatterySnapshot CreateSystemSnapshotFromIOReg(TextReader ioRegTextReader)
     {
         AppleBatteryState pending = new();
         ProcessIOReg(ioRegTextReader, (_, obj, property) =>
@@ -78,14 +84,14 @@ public record AppleBatterySnapshot(AppleBatteryState AppleBatteryState) : Batter
                 pending.Update(property);
             }
         });
-        return new AppleBatterySnapshot(pending);
+        return new AppleSystemBatterySnapshot(pending);
     }
 
     /// <summary>
     /// Creates a snapshot of the primary system battery using output from ioreg utility.
     /// </summary>
     /// <returns>A <see cref="Task{AppleBatterySnapshot}"/> returning the snapshot content.</returns>
-    public static async Task<AppleBatterySnapshot> CreateSystemSnapshotFromIORegAsync(TextReader ioRegTextReader, CancellationToken cancellationToken = default)
+    public static async Task<AppleSystemBatterySnapshot> CreateSystemSnapshotFromIORegAsync(TextReader ioRegTextReader, CancellationToken cancellationToken = default)
     {
         AppleBatteryState pending = new();
         await ProcessIORegAsync(ioRegTextReader, (_, obj, property) =>
@@ -95,7 +101,7 @@ public record AppleBatterySnapshot(AppleBatteryState AppleBatteryState) : Batter
                 pending.Update(property);
             }
         }, cancellationToken);
-        return new AppleBatterySnapshot(pending);
+        return new AppleSystemBatterySnapshot(pending);
     }
 
     private delegate void PropertyProcessDelegate(IReadOnlyList<IORegObject> stack, IORegObject obj,
