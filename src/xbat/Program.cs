@@ -19,13 +19,53 @@ class XBatCommand : Command
     {
         var snap = await BatterySnapshot.CreateSystemSnapshotAsync();
         var bi = snap.GetBatteryInfo();
-        Console.WriteLine($"charge: {(bi.ChargePercentage is { } chargePercentage ? chargePercentage.ToString("N2") : "n/a")}%");
-        Console.WriteLine($"charge health: {(bi.ChargeHealthPercentage is { } chargeHealthPercentage ? chargeHealthPercentage.ToString("N2") : "n/a")}%");
-        Console.WriteLine($"[dis]charge rate: {(bi.ChargeRate is { } chargeRate ? chargeRate.ToString("N2") : "n/a")}W");
-        Console.WriteLine($"temperature: {(bi.Temperature is { } temperature ? temperature.ToString("N2") : "n/a")}C");
-        if (context.ParseResult.GetValueForOption(_details))
+        using var stream = Console.OpenStandardOutput();
+        if (bi.HasBattery)
         {
-            Console.WriteLine($"Details: {snap.GetDetails()}");
+            Console.WriteLine($"charge: {(bi.ChargePercentage is { } chargePercentage ? chargePercentage.ToString("N2") : "n/a")}%");
+            Console.WriteLine($"charge health: {(bi.ChargeHealthPercentage is { } chargeHealthPercentage ? chargeHealthPercentage.ToString("N2") : "n/a")}%");
+            Console.WriteLine($"[dis]charge rate: {(bi.ChargeRate is { } chargeRate ? chargeRate.ToString("N2") : "n/a")}W");
+            Console.WriteLine($"temperature: {(bi.Temperature is { } temperature ? temperature.ToString("N2") : "n/a")}C");
+            {
+                Console.WriteLine($"charge status: {(bi.ChargingFlags is { } chargingFlags ? GetChargeStatus(chargingFlags) : "n/a")}");
+            }
+            {
+                if (bi.ChargingFlags is { } chargingFlags && (chargingFlags & ChargingFlags.ExternalPowerCharging) != 0)
+                {
+                    Console.WriteLine($"time to full: {(bi.TimeToChargeCompletion is { } timeToChargeCompletion ? TimeSpan.FromMinutes(timeToChargeCompletion).ToString() : "n/a")}");
+                }
+            }
+            {
+                if (bi.ChargingFlags is { } chargingFlags && (chargingFlags & ChargingFlags.Discharging) != 0)
+                {
+                    Console.WriteLine($"time to empty: {(bi.TimeToDischargeCompletion is { } timeToDischargeCompletion ? TimeSpan.FromMinutes(timeToDischargeCompletion).ToString() : "n/a")}");
+                }
+            }
+            if (context.ParseResult.GetValueForOption(_details))
+            {
+                Console.WriteLine($"Details: {snap.GetDetails()}");
+            }
         }
+        else
+        {
+            Console.WriteLine("no battery installed");
+        }
+    }
+
+    private static string GetChargeStatus(ChargingFlags chargingFlags)
+    {
+        if ((chargingFlags & ChargingFlags.ExternalPowerCharging) != 0)
+        {
+            return "charging";
+        }
+        if ((chargingFlags & ChargingFlags.ExternalPowerConnected) != 0)
+        {
+            return "plugged in";
+        }
+        if ((chargingFlags & ChargingFlags.Discharging) != 0)
+        {
+            return "discharging";
+        }
+        return "n/a";
     }
 }

@@ -1,3 +1,6 @@
+using Cello.Apple;
+using Cello.Microsoft;
+
 namespace Cello;
 
 /// <summary>
@@ -6,15 +9,28 @@ namespace Cello;
 public abstract record BatterySnapshot
 {
     /// <summary>
+    /// Checks if system snapshots are supported on this platform.
+    /// </summary>
+    /// <returns>true if system snapshots are supported on this platform.</returns>
+    public static bool IsSystemSnapshotSupported()
+    {
+        return OperatingSystem.IsOSPlatformVersionAtLeast("windows", 5, 1, 2600) || OperatingSystem.IsMacOS();
+    }
+
+    /// <summary>
     /// Creates a snapshot of the primary system battery.
     /// </summary>
     /// <returns>Snapshot content.</returns>
     /// <exception cref="PlatformNotSupportedException">Thrown if this member is not supported on the current operating system.</exception>
     public static BatterySnapshot CreateSystemSnapshot()
     {
+        if (OperatingSystem.IsOSPlatformVersionAtLeast("windows", 5, 1, 2600))
+        {
+            return WindowsBasicBatterySnapshot.CreateSystemSnapshotFromSystemPowerStatus();
+        }
         if (OperatingSystem.IsMacOS())
         {
-            return AppleBatteryState.CreateSystemSnapshotFromIOReg();
+            return AppleBatterySnapshot.CreateSystemSnapshotFromIOReg();
         }
         throw new PlatformNotSupportedException();
     }
@@ -26,9 +42,13 @@ public abstract record BatterySnapshot
     /// <exception cref="PlatformNotSupportedException">Thrown if this member is not supported on the current operating system.</exception>
     public static async Task<BatterySnapshot> CreateSystemSnapshotAsync(CancellationToken cancellationToken = default)
     {
+        if (OperatingSystem.IsOSPlatformVersionAtLeast("windows", 5, 1, 2600))
+        {
+            return WindowsBasicBatterySnapshot.CreateSystemSnapshotFromSystemPowerStatus();
+        }
         if (OperatingSystem.IsMacOS())
         {
-            return await AppleBatteryState.CreateSystemSnapshotFromIORegAsync(cancellationToken).ConfigureAwait(false);
+            return await AppleBatterySnapshot.CreateSystemSnapshotFromIORegAsync(cancellationToken).ConfigureAwait(false);
         }
         throw new PlatformNotSupportedException();
     }

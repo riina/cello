@@ -6,6 +6,11 @@
 public record struct BatteryInfo
 {
     /// <summary>
+    /// True if the device has a battery.
+    /// </summary>
+    public bool HasBattery { get; init; }
+
+    /// <summary>
     /// Current charge percentage.
     /// </summary>
     public double? ChargePercentage { get; init; }
@@ -45,30 +50,17 @@ public record struct BatteryInfo
     public double? Temperature { get; init; }
 
     /// <summary>
-    /// Initializes an instance of <see cref="BatteryInfo"/>.
+    /// Charging flags.
     /// </summary>
-    /// <param name="chargePercentage">Current charge percentage.</param>
-    /// <param name="chargeHealthPercentage">Charge health percentage.</param>
-    /// <param name="currentChargeCapacity">Current charge in mAh.</param>
-    /// <param name="maxChargeCapacity">Charge capacity in mAh.</param>
-    /// <param name="designChargeCapacity">Design charge capacity in mAh.</param>
-    /// <param name="chargeRate">Charge rate in Watts.</param>
-    /// <param name="temperature">Temperature in Celsius.</param>
-    public BatteryInfo(
-        double? chargePercentage,
-        double? chargeHealthPercentage,
-        int? currentChargeCapacity,
-        int? maxChargeCapacity,
-        int? designChargeCapacity,
-        double? chargeRate,
-        double? temperature)
-    {
-        ChargePercentage = chargePercentage;
-        ChargeHealthPercentage = chargeHealthPercentage;
-        CurrentChargeCapacity = currentChargeCapacity;
-        MaxChargeCapacity = maxChargeCapacity;
-        DesignChargeCapacity = designChargeCapacity;
-        ChargeRate = chargeRate;
-        Temperature = temperature;
-    }
+    public ChargingFlags? ChargingFlags { get; init; }
+
+    /// <summary>
+    /// Time to discharge completion, in minutes.
+    /// </summary>
+    public double? TimeToDischargeCompletion { get; init; }
+
+    /// <summary>
+    /// Time to charge completion, in minutes.
+    /// </summary>
+    public double? TimeToChargeCompletion { get; init; }
 }
