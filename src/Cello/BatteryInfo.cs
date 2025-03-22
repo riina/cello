@@ -23,17 +23,17 @@ public record struct BatteryInfo
     /// <summary>
     /// Current charge in mAh.
     /// </summary>
-    public int? CurrentChargeCapacity { get; init; }
+    public BatteryCapacityValue? CurrentChargeCapacity { get; init; }
 
     /// <summary>
     /// Charge capacity in mAh.
     /// </summary>
-    public int? MaxChargeCapacity { get; init; }
+    public BatteryCapacityValue? MaxChargeCapacity { get; init; }
 
     /// <summary>
     /// Design charge capacity in mAh.
     /// </summary>
-    public int? DesignChargeCapacity { get; init; }
+    public BatteryCapacityValue? DesignChargeCapacity { get; init; }
 
     /// <summary>
     /// Charge rate in Watts.
@@ -43,6 +43,11 @@ public record struct BatteryInfo
     /// Negative value indicates the battery is being discharged.
     /// </remarks>
     public double? ChargeRate { get; init; }
+
+    /// <summary>
+    /// Battery voltage in mV.
+    /// </summary>
+    public double? Voltage { get; init; }
 
     /// <summary>
     /// Temperature in Celsius.
@@ -55,12 +60,12 @@ public record struct BatteryInfo
     public ChargingFlags? ChargingFlags { get; init; }
 
     /// <summary>
-    /// Time to discharge completion, in minutes.
+    /// Time to discharge completion, in seconds.
     /// </summary>
     public double? TimeToDischargeCompletion { get; init; }
 
     /// <summary>
-    /// Time to charge completion, in minutes.
+    /// Time to charge completion, in seconds.
     /// </summary>
     public double? TimeToChargeCompletion { get; init; }
 }

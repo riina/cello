@@ -25,6 +25,7 @@ class XBatCommand : Command
             Console.WriteLine($"charge: {(bi.ChargePercentage is { } chargePercentage ? chargePercentage.ToString("N2") : "n/a")}%");
             Console.WriteLine($"charge health: {(bi.ChargeHealthPercentage is { } chargeHealthPercentage ? chargeHealthPercentage.ToString("N2") : "n/a")}%");
             Console.WriteLine($"[dis]charge rate: {(bi.ChargeRate is { } chargeRate ? chargeRate.ToString("N2") : "n/a")}W");
+            Console.WriteLine($"voltage: {(bi.Voltage is { } voltage ? voltage.ToString("N2") : "n/a")}mV");
             Console.WriteLine($"temperature: {(bi.Temperature is { } temperature ? temperature.ToString("N2") : "n/a")}C");
             {
                 Console.WriteLine($"charge status: {(bi.ChargingFlags is { } chargingFlags ? GetChargeStatus(chargingFlags) : "n/a")}");
@@ -32,13 +33,13 @@ class XBatCommand : Command
             {
                 if (bi.ChargingFlags is { } chargingFlags && (chargingFlags & ChargingFlags.ExternalPowerCharging) != 0)
                 {
-                    Console.WriteLine($"time to full: {(bi.TimeToChargeCompletion is { } timeToChargeCompletion ? TimeSpan.FromMinutes(timeToChargeCompletion).ToString() : "n/a")}");
+                    Console.WriteLine($"time to full: {(bi.TimeToChargeCompletion is { } timeToChargeCompletion ? TimeSpan.FromSeconds(timeToChargeCompletion).ToString() : "n/a")}");
                 }
             }
             {
                 if (bi.ChargingFlags is { } chargingFlags && (chargingFlags & ChargingFlags.Discharging) != 0)
                 {
-                    Console.WriteLine($"time to empty: {(bi.TimeToDischargeCompletion is { } timeToDischargeCompletion ? TimeSpan.FromMinutes(timeToDischargeCompletion).ToString() : "n/a")}");
+                    Console.WriteLine($"time to empty: {(bi.TimeToDischargeCompletion is { } timeToDischargeCompletion ? TimeSpan.FromSeconds(timeToDischargeCompletion).ToString() : "n/a")}");
                 }
             }
             if (context.ParseResult.GetValueForOption(_details))

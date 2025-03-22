@@ -24,9 +24,20 @@ public class BatterySnapshot_Tests
         {
             Assert.True(batteryInfo.ChargePercentage is >= 0 and <= 100);
             Assert.True(batteryInfo.ChargeHealthPercentage is >= 0 and <= 100);
-            Assert.True(batteryInfo.MaxChargeCapacity >= 0 && batteryInfo.MaxChargeCapacity <= batteryInfo.DesignChargeCapacity);
-            Assert.True(batteryInfo.CurrentChargeCapacity >= 0 && batteryInfo.CurrentChargeCapacity <= batteryInfo.MaxChargeCapacity);
+            {
+                if (batteryInfo.MaxChargeCapacity is { } maxChargeCapacity
+                    && batteryInfo.DesignChargeCapacity is { } designChargeCapacity
+                    && maxChargeCapacity.Units == designChargeCapacity.Units)
+                    Assert.True(maxChargeCapacity.Value >= 0 && maxChargeCapacity.Value <= designChargeCapacity.Value);
+            }
+            {
+                if (batteryInfo.CurrentChargeCapacity is { } currentChargeCapacity
+                    && batteryInfo.MaxChargeCapacity is { } maxChargeCapacity
+                    && currentChargeCapacity.Units == maxChargeCapacity.Units)
+                {
+                    Assert.True(currentChargeCapacity.Value >= 0 && currentChargeCapacity.Value <= maxChargeCapacity.Value);
+                }
+            }
         }
     }
-
 }

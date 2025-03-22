@@ -227,19 +227,26 @@ public struct AppleBatteryState
         {
             chargingFlags |= ChargingFlags.Discharging;
         }
-        return new BatteryInfo
+        if (AtCriticalLevel is true)
         {
-            HasBattery = BatteryInstalled ?? false,
-            ChargePercentage = chargePercentage,
-            ChargeHealthPercentage = chargeHealthPercentage,
-            CurrentChargeCapacity = AppleRawCurrentCapacity,
-            MaxChargeCapacity = AppleRawMaxCapacity,
-            DesignChargeCapacity = DesignCapacity,
-            ChargeRate = chargeRate,
-            Temperature = temperature,
-            TimeToDischargeCompletion = AvgTimeToEmpty >= 0 ? AvgTimeToEmpty : null,
-            TimeToChargeCompletion = AvgTimeToFull >= 0 ? AvgTimeToFull : null,
-            ChargingFlags = chargingFlags
-        };
+            chargingFlags |= ChargingFlags.CriticalCharge;
+        }
+        {
+            return new BatteryInfo
+            {
+                HasBattery = BatteryInstalled ?? false,
+                ChargePercentage = chargePercentage,
+                ChargeHealthPercentage = chargeHealthPercentage,
+                CurrentChargeCapacity = AppleRawCurrentCapacity is { } appleRawCurrentCapacity ? BatteryCapacityValue.FromMilliampereHours(appleRawCurrentCapacity) : null,
+                MaxChargeCapacity = AppleRawMaxCapacity is { } appleRawMaxCapacity ? BatteryCapacityValue.FromMilliampereHours(appleRawMaxCapacity) : null,
+                DesignChargeCapacity = DesignCapacity is { } designCapacity ? BatteryCapacityValue.FromMilliampereHours(designCapacity) : null,
+                ChargeRate = chargeRate,
+                Voltage = AppleRawBatteryVoltage,
+                Temperature = temperature,
+                TimeToDischargeCompletion = AvgTimeToEmpty is { } avgTimeToEmpty and >= 0 ? avgTimeToEmpty * 60 : null,
+                TimeToChargeCompletion = AvgTimeToFull is { } avgTimeToFull and >= 0 ? avgTimeToFull * 60 : null,
+                ChargingFlags = chargingFlags
+            };
+        }
     }
 }
