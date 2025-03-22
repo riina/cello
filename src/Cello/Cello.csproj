@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackOnBuild>true</PackOnBuild>
+    <PathMap>$(MSBuildProjectDirectory)=.</PathMap>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Authors>riina</Authors>
+    <Owners>riina</Owners>
+    <Description>Battery cell observation</Description>
+    <Copyright>Copyright ©2025 riina</Copyright>
+    <PackageProjectUrl>https://github.com/riina/cello</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/riina/cello</RepositoryUrl>
+    <Company>riiina</Company>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Update="NOTICE.Cello.md">
+      <Link>NOTICE.Cello.md</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <PackagePath>contentFiles/any/any/</PackagePath>
+    </Content>
+  </ItemGroup>
+
+</Project>
