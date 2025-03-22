@@ -217,6 +217,19 @@ public struct AppleBatteryState
                 temperature = virtualTemperature / 100.0;
             }
         }
+        ChargingFlags chargingFlags = ChargingFlags.None;
+        if (ExternalConnected is true)
+        {
+            chargingFlags |= ChargingFlags.ExternalPowerConnected;
+        }
+        if (IsCharging is true)
+        {
+            chargingFlags |= ChargingFlags.ExternalPowerCharging;
+        }
+        if (Amperage < 0)
+        {
+            chargingFlags |= ChargingFlags.Discharging;
+        }
         return new BatteryInfo
         {
             HasBattery = BatteryInstalled ?? false,
@@ -228,7 +241,8 @@ public struct AppleBatteryState
             ChargeRate = chargeRate,
             Temperature = temperature,
             TimeToDischargeCompletion = AvgTimeToEmpty >= 0 ? AvgTimeToEmpty : null,
-            TimeToChargeCompletion = AvgTimeToFull >= 0 ? AvgTimeToFull : null
+            TimeToChargeCompletion = AvgTimeToFull >= 0 ? AvgTimeToFull : null,
+            ChargingFlags = chargingFlags
         };
     }
 }

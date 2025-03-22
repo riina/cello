@@ -19,7 +19,7 @@ class XBatCommand : Command
     {
         var snap = await BatterySnapshot.CreateSystemSnapshotAsync();
         var bi = snap.GetBatteryInfo();
-        using var stream = Console.OpenStandardOutput();
+        await using var stream = Console.OpenStandardOutput();
         if (bi.HasBattery)
         {
             Console.WriteLine($"charge: {(bi.ChargePercentage is { } chargePercentage ? chargePercentage.ToString("N2") : "n/a")}%");
