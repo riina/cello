@@ -40,7 +40,7 @@ public record WindowsBasicBatterySnapshot : BatterySnapshot
             HasBattery = (_systemPowerStatus.BatteryFlag & 128) == 0, //
             ChargePercentage = _systemPowerStatus.BatteryLifePercent, //
             ChargingFlags = chargingFlags, //
-            TimeToDischargeCompletion = _systemPowerStatus.BatteryLifeTime != uint.MaxValue ? _systemPowerStatus.BatteryLifeTime : null
+            TimeToDischargeCompletion = _systemPowerStatus.BatteryLifeTime != uint.MaxValue ? _systemPowerStatus.BatteryLifeTime / 60.0 : null
         };
     }
 
