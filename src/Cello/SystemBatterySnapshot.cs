@@ -24,9 +24,9 @@ public abstract record SystemBatterySnapshot
     /// <exception cref="PlatformNotSupportedException">Thrown if this member is not supported on the current operating system.</exception>
     public static SystemBatterySnapshot CreateSystemSnapshot()
     {
-        if (OperatingSystem.IsOSPlatformVersionAtLeast("windows", 5, 1, 2600))
+        if (OperatingSystem.IsOSPlatformVersionAtLeast("windows", 5))
         {
-            return WindowsBasicSystemBatterySnapshot.CreateSystemSnapshotFromSystemPowerStatus();
+            return WindowsDeviceIoSystemBatterySnapshot.CreateSystemSnapshotFromDeviceIo();
         }
         if (OperatingSystem.IsMacOS())
         {
@@ -42,9 +42,9 @@ public abstract record SystemBatterySnapshot
     /// <exception cref="PlatformNotSupportedException">Thrown if this member is not supported on the current operating system.</exception>
     public static async Task<SystemBatterySnapshot> CreateSystemSnapshotAsync(CancellationToken cancellationToken = default)
     {
-        if (OperatingSystem.IsOSPlatformVersionAtLeast("windows", 5, 1, 2600))
+        if (OperatingSystem.IsOSPlatformVersionAtLeast("windows", 5))
         {
-            return WindowsBasicSystemBatterySnapshot.CreateSystemSnapshotFromSystemPowerStatus();
+            return WindowsDeviceIoSystemBatterySnapshot.CreateSystemSnapshotFromDeviceIo();
         }
         if (OperatingSystem.IsMacOS())
         {

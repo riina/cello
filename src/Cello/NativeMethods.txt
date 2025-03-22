@@ -1,2 +1,4 @@
-﻿DeviceIoControl
+﻿GUID_DEVCLASS_BATTERY
+DeviceIoControl
 GetSystemPowerStatus
+SetupDiGetClassDevs
