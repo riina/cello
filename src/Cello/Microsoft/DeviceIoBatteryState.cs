@@ -33,7 +33,7 @@ public struct DeviceIoBatteryState
     /// <summary>
     /// Temperature in tenths of degrees Kelvin.
     /// </summary>
-    public uint Temperature;
+    public uint? Temperature;
 
     /// <summary>
     /// Estimated time to complete discharge in seconds, or null if not available.

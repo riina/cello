@@ -56,7 +56,7 @@ public record WindowsDeviceIoSystemBatterySnapshot : SystemBatterySnapshot
             {
                 HasBattery = true, //
                 ChargePercentage = chargePercentage, //
-                ChargeHealthPercentage = (double)deviceIoBatteryState.FullChargedCapacity / deviceIoBatteryState.DesignedCapacity, //
+                ChargeHealthPercentage = Math.Clamp((double)deviceIoBatteryState.FullChargedCapacity / deviceIoBatteryState.DesignedCapacity * 100.0, 0, 100), //
                 CurrentChargeCapacity = deviceIoBatteryState is { CapacityIsRelative: false, Capacity: { } capacity } ? BatteryCapacityValue.FromMilliwattHours((int)capacity) : null, //
                 MaxChargeCapacity = !deviceIoBatteryState.CapacityIsRelative ? BatteryCapacityValue.FromMilliwattHours((int)deviceIoBatteryState.FullChargedCapacity) : null, //
                 DesignChargeCapacity = !deviceIoBatteryState.CapacityIsRelative ? BatteryCapacityValue.FromMilliwattHours((int)deviceIoBatteryState.DesignedCapacity) : null, //
@@ -93,7 +93,7 @@ public record WindowsDeviceIoSystemBatterySnapshot : SystemBatterySnapshot
             {
                 cr = PInvoke.CM_Get_Device_Interface_List_Size(
                     out deviceInterfaceListLength,
-                    PInvoke.GUID_DEVCLASS_BATTERY,
+                    PInvoke.GUID_DEVICE_BATTERY,
                     null, CM_GET_DEVICE_INTERFACE_LIST_FLAGS.CM_GET_DEVICE_INTERFACE_LIST_PRESENT);
                 if (cr != CONFIGRET.CR_SUCCESS)
                 {
@@ -118,7 +118,7 @@ public record WindowsDeviceIoSystemBatterySnapshot : SystemBatterySnapshot
                 }
 
                 cr = PInvoke.CM_Get_Device_Interface_List(
-                    PInvoke.GUID_DEVCLASS_BATTERY,
+                    PInvoke.GUID_DEVICE_BATTERY,
                     null,
                     new PZZWSTR(deviceInterfaceList.Value),
                     deviceInterfaceListLength,
@@ -131,7 +131,7 @@ public record WindowsDeviceIoSystemBatterySnapshot : SystemBatterySnapshot
             }
             var deviceInterfaces = new List<string>();
             int currentStart = 0;
-            int end = deviceInterfaceList.Length; // excludes last null terminator
+            int end = deviceInterfaceList.Length + 1;
             char* deviceInterfaceListPtr = deviceInterfaceList.Value;
             for (int i = 0; i < end; i++)
             {
@@ -173,7 +173,7 @@ public record WindowsDeviceIoSystemBatterySnapshot : SystemBatterySnapshot
                         BATTERY_INFORMATION bi = default;
                         bqi.InformationLevel = BATTERY_QUERY_INFORMATION_LEVEL.BatteryInformation;
 
-                        if (PInvoke.DeviceIoControl(hBattery,
+                        if (!PInvoke.DeviceIoControl(hBattery,
                                 PInvoke.IOCTL_BATTERY_QUERY_INFORMATION,
                                 &bqi,
                                 (uint)sizeof(BATTERY_QUERY_INFORMATION),
@@ -184,23 +184,27 @@ public record WindowsDeviceIoSystemBatterySnapshot : SystemBatterySnapshot
                         {
                             throw new Win32Exception(Marshal.GetLastWin32Error());
                         }
-                        uint temperature;
-                        bqi.InformationLevel = BATTERY_QUERY_INFORMATION_LEVEL.BatteryTemperature;
-                        if (PInvoke.DeviceIoControl(hBattery,
-                                PInvoke.IOCTL_BATTERY_QUERY_INFORMATION,
-                                &bqi,
-                                (uint)sizeof(BATTERY_QUERY_INFORMATION),
-                                &temperature,
-                                sizeof(uint),
-                                &dwOut,
-                                null))
-                        {
-                            throw new Win32Exception(Marshal.GetLastWin32Error());
-                        }
+                        uint? temperature = null;
+                        /*{
+                            uint temperatureV;
+                            bqi.InformationLevel = BATTERY_QUERY_INFORMATION_LEVEL.BatteryTemperature;
+                            if (!PInvoke.DeviceIoControl(hBattery,
+                                    PInvoke.IOCTL_BATTERY_QUERY_INFORMATION,
+                                    &bqi,
+                                    (uint)sizeof(BATTERY_QUERY_INFORMATION),
+                                    &temperatureV,
+                                    sizeof(uint),
+                                    &dwOut,
+                                    null))
+                            {
+                                throw new Win32Exception(Marshal.GetLastWin32Error());
+                            }
+                            temperature = temperatureV;
+                        }*/
                         uint estimatedTime;
                         bqi.InformationLevel = BATTERY_QUERY_INFORMATION_LEVEL.BatteryEstimatedTime;
                         bqi.AtRate = 0;
-                        if (PInvoke.DeviceIoControl(hBattery,
+                        if (!PInvoke.DeviceIoControl(hBattery,
                                 PInvoke.IOCTL_BATTERY_QUERY_INFORMATION,
                                 &bqi,
                                 (uint)sizeof(BATTERY_QUERY_INFORMATION),

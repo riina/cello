@@ -22,11 +22,11 @@ class XBatCommand : Command
         await using var stream = Console.OpenStandardOutput();
         if (bi.HasBattery)
         {
-            Console.WriteLine($"charge: {(bi.ChargePercentage is { } chargePercentage ? chargePercentage.ToString("N2") : "n/a")}%");
-            Console.WriteLine($"charge health: {(bi.ChargeHealthPercentage is { } chargeHealthPercentage ? chargeHealthPercentage.ToString("N2") : "n/a")}%");
-            Console.WriteLine($"[dis]charge rate: {(bi.ChargeRate is { } chargeRate ? chargeRate.ToString("N2") : "n/a")}W");
-            Console.WriteLine($"voltage: {(bi.Voltage is { } voltage ? voltage.ToString("N2") : "n/a")}mV");
-            Console.WriteLine($"temperature: {(bi.Temperature is { } temperature ? temperature.ToString("N2") : "n/a")}C");
+            Console.WriteLine($"charge: {(bi.ChargePercentage is { } chargePercentage ? $"{chargePercentage:N2}%" : "n/a")}");
+            Console.WriteLine($"charge health: {(bi.ChargeHealthPercentage is { } chargeHealthPercentage ? $"{chargeHealthPercentage:N2}%" : "n/a")}");
+            Console.WriteLine($"[dis]charge rate: {(bi.ChargeRate is { } chargeRate ? $"{chargeRate:N2}W" : "n/a")}");
+            Console.WriteLine($"voltage: {(bi.Voltage is { } voltage ? $"{voltage:N2}mV" : "n/a")}");
+            Console.WriteLine($"temperature: {(bi.Temperature is { } temperature ? $"{temperature:N2}C" : "n/a")}");
             {
                 Console.WriteLine($"charge status: {(bi.ChargingFlags is { } chargingFlags ? GetChargeStatus(chargingFlags) : "n/a")}");
             }
