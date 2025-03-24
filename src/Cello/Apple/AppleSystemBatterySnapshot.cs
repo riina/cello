@@ -56,6 +56,7 @@ public record AppleSystemBatterySnapshot(AppleBatteryState AppleBatteryState) : 
     /// <summary>
     /// Creates a snapshot of the primary system battery using the ioreg utility.
     /// </summary>
+    /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>A <see cref="Task{AppleBatterySnapshot}"/> returning the snapshot content.</returns>
     [SupportedOSPlatform("MacOS")]
     public static async Task<AppleSystemBatterySnapshot> CreateSystemSnapshotFromIORegAsync(CancellationToken cancellationToken = default)

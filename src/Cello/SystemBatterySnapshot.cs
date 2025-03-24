@@ -1,4 +1,5 @@
 using Cello.Apple;
+using Cello.Linux;
 using Cello.Microsoft;
 
 namespace Cello;
@@ -14,7 +15,7 @@ public abstract record SystemBatterySnapshot
     /// <returns>true if system snapshots are supported on this platform.</returns>
     public static bool IsSystemSnapshotSupported()
     {
-        return OperatingSystem.IsOSPlatformVersionAtLeast("windows", 5, 1, 2600) || OperatingSystem.IsMacOS();
+        return OperatingSystem.IsLinux() || OperatingSystem.IsOSPlatformVersionAtLeast("windows", 5, 1, 2600) || OperatingSystem.IsMacOS();
     }
 
     /// <summary>
@@ -24,6 +25,10 @@ public abstract record SystemBatterySnapshot
     /// <exception cref="PlatformNotSupportedException">Thrown if this member is not supported on the current operating system.</exception>
     public static SystemBatterySnapshot CreateSystemSnapshot()
     {
+        if (OperatingSystem.IsLinux())
+        {
+            return LinuxSystemBatterySnapshot.CreateSystemSnapshotFromPowerSupplyDirectory();
+        }
         if (OperatingSystem.IsOSPlatformVersionAtLeast("windows", 5, 1, 2600))
         {
             return WindowsDeviceIoSystemBatterySnapshot.CreateSystemSnapshotFromDeviceIo();
@@ -42,6 +47,10 @@ public abstract record SystemBatterySnapshot
     /// <exception cref="PlatformNotSupportedException">Thrown if this member is not supported on the current operating system.</exception>
     public static async Task<SystemBatterySnapshot> CreateSystemSnapshotAsync(CancellationToken cancellationToken = default)
     {
+        if (OperatingSystem.IsLinux())
+        {
+            return await LinuxSystemBatterySnapshot.CreateSystemSnapshotFromPowerSupplyDirectoryAsync(cancellationToken);
+        }
         if (OperatingSystem.IsOSPlatformVersionAtLeast("windows", 5, 1, 2600))
         {
             return WindowsDeviceIoSystemBatterySnapshot.CreateSystemSnapshotFromDeviceIo();

@@ -14,7 +14,7 @@ public record struct BatteryCapacityValue
     /// <summary>
     /// Value.
     /// </summary>
-    public int Value { get; init; }
+    public double Value { get; init; }
 
     /// <summary>
     /// Units for this value.
@@ -26,7 +26,7 @@ public record struct BatteryCapacityValue
     /// </summary>
     /// <param name="value">Value in mAh.</param>
     /// <returns>Value combining numeric value and units.</returns>
-    public static BatteryCapacityValue FromMilliampereHours(int value)
+    public static BatteryCapacityValue FromMilliampereHours(double value)
     {
         return new BatteryCapacityValue { Value = value, Units = BatteryCapacityUnits.MilliampereHours };
     }
@@ -36,7 +36,7 @@ public record struct BatteryCapacityValue
     /// </summary>
     /// <param name="value">Value in mWh.</param>
     /// <returns>Value combining numeric value and units.</returns>
-    public static BatteryCapacityValue FromMilliwattHours(int value)
+    public static BatteryCapacityValue FromMilliwattHours(double value)
     {
         return new BatteryCapacityValue { Value = value, Units = BatteryCapacityUnits.MilliwattHours };
     }

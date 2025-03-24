@@ -11,13 +11,13 @@ namespace Cello.Microsoft;
 /// </summary>
 public record WindowsBasicSystemBatterySnapshot : SystemBatterySnapshot
 {
+    internal SYSTEM_POWER_STATUS SystemPowerStatus { get; init; }
+
     [SupportedOSPlatform("windows5.1.2600")]
     internal WindowsBasicSystemBatterySnapshot(SYSTEM_POWER_STATUS systemPowerStatus)
     {
-        _systemPowerStatus = systemPowerStatus;
+        SystemPowerStatus = systemPowerStatus;
     }
-
-    internal SYSTEM_POWER_STATUS _systemPowerStatus { get; init; }
 
     private static BatteryInfo CreateBatteryInfo(SYSTEM_POWER_STATUS systemPowerStatus)
     {
@@ -46,13 +46,13 @@ public record WindowsBasicSystemBatterySnapshot : SystemBatterySnapshot
     /// <inheritdoc />
     public override BatteryInfo GetPrimaryBatteryInfo()
     {
-        return CreateBatteryInfo(_systemPowerStatus);
+        return CreateBatteryInfo(SystemPowerStatus);
     }
 
     /// <inheritdoc />
     public override List<BatteryInfo> GetBatteryInfos()
     {
-        return [CreateBatteryInfo(_systemPowerStatus)];
+        return [CreateBatteryInfo(SystemPowerStatus)];
     }
 
     /// <inheritdoc />
