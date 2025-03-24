@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cello", "src\Cello\Cello.csproj", "{6C48668F-6EF5-4D61-B9EE-062A714329F3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cello", "Cello\Cello.csproj", "{6C48668F-6EF5-4D61-B9EE-062A714329F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cello.Tests", "src\Cello.Tests\Cello.Tests.csproj", "{A1954E02-2FD5-4253-87AA-BED6E8FEE402}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cello.Tests", "Cello.Tests\Cello.Tests.csproj", "{A1954E02-2FD5-4253-87AA-BED6E8FEE402}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xbat", "src\xbat\xbat.csproj", "{C26DF5F1-4A7E-4907-8D77-7C404E65DB5A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xbat", "xbat\xbat.csproj", "{C26DF5F1-4A7E-4907-8D77-7C404E65DB5A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
