@@ -36,4 +36,4 @@ Library per-platform support for standardized properties is listed in this table
 
 [2] Charge values on macOS are available as Milliampere-hours.
 
-[3] Discharge time is estimated based on remaining capacity and current draw.
+[3] Discharge/charge time is estimated based on remaining capacity and current draw.
