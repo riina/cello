@@ -2,6 +2,10 @@
 
 Battery cell observation
 
+| Package              | Release                                                                                                               |
+|----------------------|-----------------------------------------------------------------------------------------------------------------------|
+| `Cello`                | [![NuGet](https://img.shields.io/nuget/v/Cello.svg)](https://www.nuget.org/packages/Cello/)                               |
+
 ### Supported Platforms
 
 Windows 10 1607+, Windows 11 22H2+
