@@ -49,4 +49,21 @@ public struct DeviceIoBatteryState
     /// Charging flags.
     /// </summary>
     public ChargingFlags ChargingFlags;
+
+    /// <inheritdoc />
+    public override string ToString()
+    {
+        return $$"""
+                 {
+                     CapacityIsRelative = {{CapacityIsRelative}},
+                     Capacity = {{Capacity?.ToString() ?? "null"}},
+                     Rate = {{Rate?.ToString() ?? "null"}},
+                     DesignedCapacity = {{DesignedCapacity}},
+                     FullChargedCapacity = {{FullChargedCapacity}},
+                     Temperature = {{Temperature?.ToString() ?? "null"}},
+                     EstimatedTime = {{EstimatedTime?.ToString() ?? "null"}},
+                     ChargingFlags = {{(uint)ChargingFlags}},
+                 }
+                 """;
+    }
 }

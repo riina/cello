@@ -58,7 +58,16 @@ public record WindowsBasicSystemBatterySnapshot : SystemBatterySnapshot
     /// <inheritdoc />
     public override string GetDetails()
     {
-        throw new NotImplementedException();
+        return $$"""
+                 {
+                     ACLineStatus = {{SystemPowerStatus.ACLineStatus}},
+                     BatteryFlag = {{SystemPowerStatus.BatteryFlag}},
+                     BatteryFullLifeTime = {{SystemPowerStatus.BatteryFullLifeTime}},
+                     BatteryLifePercent = {{SystemPowerStatus.BatteryLifePercent}},
+                     BatteryLifeTime = {{SystemPowerStatus.BatteryLifeTime}},
+                     SystemStatusFlag = {{SystemPowerStatus.SystemStatusFlag}},
+                 }
+                 """;
     }
 
     /// <summary>

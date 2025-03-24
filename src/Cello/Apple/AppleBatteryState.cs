@@ -155,29 +155,31 @@ public struct AppleBatteryState
     /// <inheritdoc />
     public override string ToString()
     {
-        return @$"{{
-    AppleRawCurrentCapacity = {AppleRawCurrentCapacity?.ToString() ?? "null"},
-    AppleRawMaxCapacity = {AppleRawMaxCapacity?.ToString() ?? "null"},
-    AppleRawBatteryVoltage = {AppleRawBatteryVoltage?.ToString() ?? "null"},
-    CurrentCapacity = {CurrentCapacity?.ToString() ?? "null"},
-    NominalChargeCapacity = {NominalChargeCapacity?.ToString() ?? "null"},
-    MaxCapacity = {MaxCapacity?.ToString() ?? "null"},
-    DesignCapacity = {DesignCapacity?.ToString() ?? "null"},
-    Voltage = {Voltage?.ToString() ?? "null"},
-    IsCharging = {IsCharging?.ToString() ?? "null"},
-    BatteryInstalled = {BatteryInstalled?.ToString() ?? "null"},
-    AtCriticalLevel = {AtCriticalLevel?.ToString() ?? "null"},
-    VirtualTemperature = {VirtualTemperature?.ToString() ?? "null"},
-    Amperage = {Amperage?.ToString() ?? "null"},
-    CycleCount = {CycleCount?.ToString() ?? "null"},
-    ExternalConnected = {ExternalConnected?.ToString() ?? "null"},
-    ExternalChargeCapable = {ExternalChargeCapable?.ToString() ?? "null"},
-    UpdateTime = {(UpdateTime != null ? $"{UpdateTime.ToString()} /* {DateTimeOffset.FromUnixTimeSeconds((long)UpdateTime).ToString()} */" : "null")},
-    DesignCycleCount9C = {DesignCycleCount9C?.ToString() ?? "null"},
-    TimeRemaining = {TimeRemaining?.ToString() ?? "null"},
-    AvgTimeToFull = {AvgTimeToFull?.ToString() ?? "null"},
-    AvgTimeToEmpty = {AvgTimeToEmpty?.ToString() ?? "null"},
-}}";
+        return $$"""
+                 {
+                     AppleRawCurrentCapacity = {{AppleRawCurrentCapacity?.ToString() ?? "null"}},
+                     AppleRawMaxCapacity = {{AppleRawMaxCapacity?.ToString() ?? "null"}},
+                     AppleRawBatteryVoltage = {{AppleRawBatteryVoltage?.ToString() ?? "null"}},
+                     CurrentCapacity = {{CurrentCapacity?.ToString() ?? "null"}},
+                     NominalChargeCapacity = {{NominalChargeCapacity?.ToString() ?? "null"}},
+                     MaxCapacity = {{MaxCapacity?.ToString() ?? "null"}},
+                     DesignCapacity = {{DesignCapacity?.ToString() ?? "null"}},
+                     Voltage = {{Voltage?.ToString() ?? "null"}},
+                     IsCharging = {{IsCharging?.ToString() ?? "null"}},
+                     BatteryInstalled = {{BatteryInstalled?.ToString() ?? "null"}},
+                     AtCriticalLevel = {{AtCriticalLevel?.ToString() ?? "null"}},
+                     VirtualTemperature = {{VirtualTemperature?.ToString() ?? "null"}},
+                     Amperage = {{Amperage?.ToString() ?? "null"}},
+                     CycleCount = {{CycleCount?.ToString() ?? "null"}},
+                     ExternalConnected = {{ExternalConnected?.ToString() ?? "null"}},
+                     ExternalChargeCapable = {{ExternalChargeCapable?.ToString() ?? "null"}},
+                     UpdateTime = {{(UpdateTime != null ? $"{UpdateTime.ToString()} /* {DateTimeOffset.FromUnixTimeSeconds((long)UpdateTime).ToString()} */" : "null")}},
+                     DesignCycleCount9C = {{DesignCycleCount9C?.ToString() ?? "null"}},
+                     TimeRemaining = {{TimeRemaining?.ToString() ?? "null"}},
+                     AvgTimeToFull = {{AvgTimeToFull?.ToString() ?? "null"}},
+                     AvgTimeToEmpty = {{AvgTimeToEmpty?.ToString() ?? "null"}},
+                 }
+                 """;
     }
 
     /// <summary>
