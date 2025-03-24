@@ -76,6 +76,11 @@ public struct LinuxBatteryState
     public string? Technology;
 
     /// <summary>
+    /// Temperature of power supply in tenths of degrees Celsius.
+    /// </summary>
+    public long? Temp;
+
+    /// <summary>
     /// Component type.
     /// </summary>
     public string? Type;

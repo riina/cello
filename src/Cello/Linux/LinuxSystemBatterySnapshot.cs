@@ -123,6 +123,7 @@ public partial record LinuxSystemBatterySnapshot : SystemBatterySnapshot
                 MaxChargeCapacity = linuxBatteryState.EnergyFull is { } energyFull ? BatteryCapacityValue.FromMilliwattHours(energyFull / 1000.0) : null, //
                 DesignChargeCapacity = linuxBatteryState.EnergyFullDesign is { } energyFullDesign ? BatteryCapacityValue.FromMilliwattHours(energyFullDesign / 1000.0) : null, //
                 ChargeRate = chargeRate, //
+                Temperature = linuxBatteryState.Temp is { } temp ? temp / 10.0 : null, //
                 Voltage = linuxBatteryState.VoltageNow is { } voltageNow ? voltageNow / 1000.0 : null, //
                 ChargingFlags = chargingFlags, //
                 TimeToDischargeCompletion = timeToDischargeCompletion, //
@@ -309,6 +310,7 @@ public partial record LinuxSystemBatterySnapshot : SystemBatterySnapshot
             SerialNumber = dictionary.GetValueOrDefault("serial_number"), //
             Status = dictionary.GetValueOrDefault("status"), //
             Technology = dictionary.GetValueOrDefault("technology"), //
+            Temp = ReadValueOrFallback<long>(dictionary, "temp"), //
             Type = dictionary.GetValueOrDefault("type"), //
             VoltageMinDesign = ReadValueOrFallback<ulong>(dictionary, "voltage_min_design"), //
             VoltageNow = ReadValueOrFallback<ulong>(dictionary, "voltage_now"), //
@@ -336,6 +338,7 @@ public partial record LinuxSystemBatterySnapshot : SystemBatterySnapshot
         "serial_number", //
         "status", //
         "technology", //
+        "temp", //
         "type", //
         "voltage_min_design", //
         "voltage_now", //
