@@ -40,7 +40,7 @@ public record WindowsDeviceIoSystemBatterySnapshot : SystemBatterySnapshot
     /// <inheritdoc />
     public override List<BatteryInfo> GetBatteryInfos()
     {
-        return [..DeviceIoBatteryStates.Select(CreateBatteryInfo)];
+        return [.. DeviceIoBatteryStates.Select(CreateBatteryInfo)];
     }
 
     private BatteryInfo CreateBatteryInfo(DeviceIoBatteryState deviceIoBatteryState)
@@ -73,7 +73,7 @@ public record WindowsDeviceIoSystemBatterySnapshot : SystemBatterySnapshot
     /// <inheritdoc />
     public override string GetDetails()
     {
-        return new StringBuilder("[").AppendJoin($",{Environment.NewLine}", DeviceIoBatteryStates.Select(static s => s.ToString())).Append(']').ToString();
+        return new StringBuilder("[").Append(Environment.NewLine).AppendJoin($",{Environment.NewLine}", DeviceIoBatteryStates.Select(static s => s.ToString())).Append(Environment.NewLine).Append(']').ToString();
     }
 
     /// <summary>
@@ -186,7 +186,7 @@ public record WindowsDeviceIoSystemBatterySnapshot : SystemBatterySnapshot
                             throw new Win32Exception(Marshal.GetLastWin32Error());
                         }
                         uint? temperature = null;
-                        /*{
+                        {
                             uint temperatureV;
                             bqi.InformationLevel = BATTERY_QUERY_INFORMATION_LEVEL.BatteryTemperature;
                             if (!PInvoke.DeviceIoControl(hBattery,
@@ -198,10 +198,21 @@ public record WindowsDeviceIoSystemBatterySnapshot : SystemBatterySnapshot
                                     &dwOut,
                                     null))
                             {
-                                throw new Win32Exception(Marshal.GetLastWin32Error());
+                                int error = Marshal.GetLastWin32Error();
+                                if (error == (int)WIN32_ERROR.ERROR_INVALID_FUNCTION)
+                                {
+                                    temperature = null;
+                                }
+                                else
+                                {
+                                    throw new Win32Exception(error);
+                                }
                             }
-                            temperature = temperatureV;
-                        }*/
+                            else
+                            {
+                                temperature = temperatureV;
+                            }
+                        }
                         uint estimatedTime;
                         bqi.InformationLevel = BATTERY_QUERY_INFORMATION_LEVEL.BatteryEstimatedTime;
                         bqi.AtRate = 0;
