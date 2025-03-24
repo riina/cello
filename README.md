@@ -1,3 +1,5 @@
+[![.NET](https://github.com/riina/cello/actions/workflows/dotnet.yml/badge.svg)](https://github.com/riina/cello/actions/workflows/dotnet.yml)
+
 ## cello
 
 Battery cell observation
