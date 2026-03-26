@@ -3,7 +3,10 @@ using System.CommandLine.Invocation;
 using Cello;
 
 var command = new XBatCommand("a", "b");
-await command.InvokeAsync(args);
+var parseResult = command.Parse(args);
+parseResult.InvocationConfiguration.Output = Console.Error;
+parseResult.InvocationConfiguration.Error = Console.Error;
+return await parseResult.InvokeAsync();
 
 class XBatCommand : Command
 {
@@ -11,11 +14,11 @@ class XBatCommand : Command
 
     public XBatCommand(string name, string? description = null) : base(name, description)
     {
-        AddOption(_details = new Option<bool>(["-d", "--details"], "Display tracked battery details"));
-        this.SetHandler(HandleAsync);
+        Add(_details = new Option<bool>("-d", "--details"){Description = "Display tracked battery details"});
+        SetAction(HandleAsync);
     }
 
-    private async Task HandleAsync(InvocationContext context)
+    private async Task HandleAsync(ParseResult parseResult)
     {
         var snap = await SystemBatterySnapshot.CreateSystemSnapshotAsync();
         var bi = snap.GetPrimaryBatteryInfo();
@@ -42,7 +45,7 @@ class XBatCommand : Command
                     Console.WriteLine($"time to empty: {(bi.TimeToDischargeCompletion is { } timeToDischargeCompletion ? TimeSpan.FromSeconds(timeToDischargeCompletion).ToString() : "n/a")}");
                 }
             }
-            if (context.ParseResult.GetValueForOption(_details))
+            if (parseResult.GetValue(_details))
             {
                 Console.WriteLine($"Details: {snap.GetDetails()}");
             }

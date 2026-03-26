@@ -158,7 +158,7 @@ public record WindowsDeviceIoSystemBatterySnapshot : SystemBatterySnapshot
                     int dwWait = 0;
                     uint dwOut;
                     if (!PInvoke.DeviceIoControl(
-                            hBattery,
+                            new HANDLE(hBattery.DangerousGetHandle()),
                             PInvoke.IOCTL_BATTERY_QUERY_TAG,
                             &dwWait,
                             sizeof(int),
@@ -174,7 +174,8 @@ public record WindowsDeviceIoSystemBatterySnapshot : SystemBatterySnapshot
                         BATTERY_INFORMATION bi = default;
                         bqi.InformationLevel = BATTERY_QUERY_INFORMATION_LEVEL.BatteryInformation;
 
-                        if (!PInvoke.DeviceIoControl(hBattery,
+                        if (!PInvoke.DeviceIoControl(
+                                new HANDLE(hBattery.DangerousGetHandle()),
                                 PInvoke.IOCTL_BATTERY_QUERY_INFORMATION,
                                 &bqi,
                                 (uint)sizeof(BATTERY_QUERY_INFORMATION),
@@ -189,7 +190,8 @@ public record WindowsDeviceIoSystemBatterySnapshot : SystemBatterySnapshot
                         {
                             uint temperatureV;
                             bqi.InformationLevel = BATTERY_QUERY_INFORMATION_LEVEL.BatteryTemperature;
-                            if (!PInvoke.DeviceIoControl(hBattery,
+                            if (!PInvoke.DeviceIoControl(
+                                    new HANDLE(hBattery.DangerousGetHandle()),
                                     PInvoke.IOCTL_BATTERY_QUERY_INFORMATION,
                                     &bqi,
                                     (uint)sizeof(BATTERY_QUERY_INFORMATION),
@@ -216,7 +218,8 @@ public record WindowsDeviceIoSystemBatterySnapshot : SystemBatterySnapshot
                         uint estimatedTime;
                         bqi.InformationLevel = BATTERY_QUERY_INFORMATION_LEVEL.BatteryEstimatedTime;
                         bqi.AtRate = 0;
-                        if (!PInvoke.DeviceIoControl(hBattery,
+                        if (!PInvoke.DeviceIoControl(
+                                new HANDLE(hBattery.DangerousGetHandle()),
                                 PInvoke.IOCTL_BATTERY_QUERY_INFORMATION,
                                 &bqi,
                                 (uint)sizeof(BATTERY_QUERY_INFORMATION),
@@ -239,7 +242,8 @@ public record WindowsDeviceIoSystemBatterySnapshot : SystemBatterySnapshot
                             bws.BatteryTag = bqi.BatteryTag;
 
                             BATTERY_STATUS bs;
-                            if (!PInvoke.DeviceIoControl(hBattery,
+                            if (!PInvoke.DeviceIoControl(
+                                    new HANDLE(hBattery.DangerousGetHandle()),
                                     PInvoke.IOCTL_BATTERY_QUERY_STATUS,
                                     &bws,
                                     (uint)sizeof(BATTERY_WAIT_STATUS),

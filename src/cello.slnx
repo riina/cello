@@ -1,0 +1,10 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="Cello.Tests/Cello.Tests.csproj" />
+  <Project Path="Cello/Cello.csproj" />
+  <Project Path="xbat/xbat.csproj" />
+</Solution>
